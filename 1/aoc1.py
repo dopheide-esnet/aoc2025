@@ -40,21 +40,7 @@ class Lock:
                         passed = 1
             passed += temp
 
-#            else:
-                # num <= 100
-#                temp = 
-#                passed = int ((orig_loc+num) / self.digits)
-
-
-
-        # When moving left 
-        # But when we move right and end up on exactly 0, we miss one.
-#        if(move == "R" and self.loc == 0):
-#            passed += 1
-#        if(move == "L" and self.loc == 0 and temp == 100):
-#            passed += 1
-
-        print(f"\n{orig_loc} {move}{num} {self.loc} passed {passed}")
+#        print(f"\n{orig_loc} {move}{num} {self.loc} passed {passed}")
 
         return passed
     
