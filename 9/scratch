@@ -1,0 +1,106 @@
+
+........
+....#x#.
+....x.#xxx#.
+.#xx#.....x
+.x........x
+.#xxxx#...x
+......#xxx#
+
+........
+....222.
+....2233333
+.1112233333
+.1111.33333
+.1111x33333
+......33333
+
+........
+....222.
+....2233333
+.4444433333
+.4444433333
+.4444433333
+......33333
+
+..............
+.......#xxx#..
+.......x...x..
+..#xxxx#...x..
+..x........x..
+..#xxxxxx#.x..
+.........x.x..
+.........#x#..
+..............
+
+..............
+.......22222..
+.......22222..
+..1111122222..
+..111111...x..
+..111111x#.x..
+.........x.x..
+.........#x#..
+..............
+
+..............
+.......22333..
+.......22333..
+..1111122333..
+..111111.333..
+..111111x333..
+.........333..
+.........333..
+..............
+
+..............
+.......22333..
+.......22333..
+..1111122333..
+..111111.333..
+..111111x444..
+.........444..
+.........444..
+..............
+
+..............
+.......22333..
+.......22333..
+..5555555533..
+..5555555533..
+..5555555544..
+.........444..
+.........444..
+..............
+
+
+
+
+could convert points to lines.
+then the lines can be used to determine if a point is inside the polygon or not.
+using Ray Casting Algorithm (sorta).
+
+We draw a line right, but then we need an algorithm to see if two lines intersect.
+BUT.. these lines don't go to infinity, so the intersection point has to actually be within the
+bounds of the line.
+
+watch out for line thickness.
+
+now draw rectangles, from 'right turn' sections.
+test if the non-used corners are INSIDE the shape or not.
+if not, discard.
+
+if a point is ON any line horizontal or vertical it's inside.
+
+..............
+.......#xxx#..
+.......x...x..
+..#x# ##...x..
+..x.#x#....x..
+..#xxxxxx#.x..
+.........x.x..
+.........#x#..
+..............
+
+
+

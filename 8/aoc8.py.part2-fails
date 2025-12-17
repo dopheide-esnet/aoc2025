@@ -1,0 +1,189 @@
+#!/usr/bin/env python3
+
+import math
+
+testcase = True
+if testcase:
+    file = "test.txt"
+else:
+    file = "input.txt"
+
+def TestWorks():
+    return True
+
+class JunctionBox:
+    def __init__(self,x,y,z):
+        self.x = x
+        self.y = y
+        self.z = z
+        self.connected = False
+        self.circuit_id = None
+        self.neighbor = None  # closest neighbor
+        self.neighbor_dist = None
+        self.id = -1
+    def print(self):
+        print(f"{self.id} {self.x},{self.y},{self.z}  {self.connected}  {self.circuit_id}  {self.neighbor}  {self.neighbor_dist}")
+
+#class Circuit:
+#    def __init__(self,box1,box2):
+#        boxes = [box1,box2]
+
+def Dist(box1,box2):
+    return math.sqrt((box2.x - box1.x)**2 + (box2.y - box1.y)**2 + (box2.z - box1.z)**2)
+
+def SortByMinDist(box):
+    return box.neighbor_dist
+
+def SortByCircuitLen(c):
+    return len(c)
+
+def FindUnconnectedMinimums(boxes):
+    for i in range(len(boxes)):
+        min_dist = -1
+        for j in range(len(boxes)):
+            if(i != j):
+                # if they are not both connected in the same circuit already
+                if(boxes[i].circuit_id != boxes[j].circuit_id or
+                    (boxes[i].circuit_id == None and boxes[j].circuit_id == None)): 
+
+                    # try not doing combines
+#                    if(boxes[i].connected == True and boxes[j].connected == True):
+#                        continue
+
+                    dist = Dist(boxes[i],boxes[j])
+                    if(dist == min_dist):
+                        print("Ummm..what?")
+                        exit(1)
+                    if(min_dist == -1 or dist < min_dist):
+                        min_dist = dist
+                        neighbor = boxes[j].id
+        boxes[i].neighbor = neighbor
+        boxes[i].neighbor_dist = min_dist
+        # on the first run:
+        if(boxes[i].id == -1):
+            boxes[i].id = i
+
+def run_with_file(input_file):
+    try:
+        stuff = open(input_file,"r")
+    except FileNotFoundError:
+        print("Gonna need an input file there, Bud.")
+        exit(0)
+    else:
+        with stuff:
+            lines = stuff.read().splitlines()
+    total1=0  # number of splits
+    total2=0
+
+    boxes = []
+    for line in lines:
+        (x,y,z) = line.split(',')
+        boxes.append(JunctionBox(int(x),int(y),int(z)))
+
+    circuits = {}
+    next_circuit_id = 1
+    count = 1
+
+    while(count < 10):
+
+#        print("Num Circuits",len(circuits))
+        # this is going to be really inefficient
+        FindUnconnectedMinimums(boxes)
+
+        # Sort boxes by minimum connection distance.
+        # will still need to reference the original list to not screw up neighbor ids
+        boxes_sorted = boxes.copy()
+        boxes_sorted.sort(key=SortByMinDist)
+
+        box_id = boxes_sorted[0].id
+        neigh_id = boxes[box_id].neighbor
+#    for box in boxes_sorted:
+        #if(box.neighbor == prev_box_id):
+        #    prev_box_id = box.id
+        #    continue
+            # we just processed this connection, we can skip it.
+        
+        if boxes[box_id].connected == True and boxes[neigh_id].connected == False:
+            # connect up the neighbor
+            boxes[neigh_id].connected = True
+            boxes[neigh_id].circuit_id = boxes[box_id].circuit_id
+            circuits[boxes[box_id].circuit_id].append(boxes[neigh_id].id)
+            if(boxes[neigh_id].id != neigh_id):
+                print("emergency")
+                exit()
+            count += 1
+        elif(boxes[box_id].connected == True and boxes[neigh_id].connected == True):
+            # Combine two non-equal existing circuits
+            
+            if(boxes[box_id].circuit_id != boxes[neigh_id].circuit_id):
+                circuits[boxes[box_id].circuit_id].extend(circuits[boxes[neigh_id].circuit_id])
+
+                to_delete = boxes[neigh_id].circuit_id
+                # update the other circuit ids to match.
+                for cb in circuits[boxes[neigh_id].circuit_id]:
+                    boxes[cb].circuit_id = boxes[box_id].circuit_id
+
+                del circuits[to_delete]
+                
+                count += 1
+            else:
+                print("alread connected shouldn't be in min dist list")
+                exit(1)
+        elif boxes[box_id].connected == False:
+            # is it's neighbor already connected?  # if so, join the circuit
+            if boxes[neigh_id].connected == True:
+                boxes[box_id].connected = True
+                boxes[box_id].circuit_id = boxes[neigh_id].circuit_id
+                circuits[boxes[box_id].circuit_id].append(box_id)
+            else:
+                # connect them together at a new circuit id
+                circuits[next_circuit_id] = [boxes[box_id].id,boxes[neigh_id].id]
+                boxes[box_id].circuit_id = next_circuit_id
+                boxes[neigh_id].circuit_id = next_circuit_id
+                boxes[box_id].connected = True
+                boxes[neigh_id].connected = True
+                next_circuit_id += 1
+            count += 1
+
+#    print(len(boxes_sorted))
+#    for b in boxes_sorted:
+#        b.print()           
+
+#    for box in boxes_sorted:
+#        box.print()
+
+#    for c in circuits:
+#        print (len(circuits[c]))
+
+    keys_sorted = sorted(circuits.items(), key=lambda item: len(item[1]), reverse=True)
+ 
+#    print(keys_sorted)
+    total1 = 1
+
+    print(len(keys_sorted))
+#    (x,b) = keys_sorted[0]
+#    print(len(b))
+    for i in range(3):
+        (x,b) = keys_sorted[i]
+        total1 *= len(b)
+
+    return (total1,total2)
+
+
+
+if(__name__ == '__main__'):    
+    (total1,total2) = run_with_file(file)
+
+    print(f"Total1: {total1}")
+    print(f"Total2: {total2}")
+
+
+
+
+
+
+
+    
+
+
+

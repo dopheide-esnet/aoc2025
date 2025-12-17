@@ -1,0 +1,45 @@
+
+There is no subtracting now.
+Can we just pick a number to start with and hit those buttons the required
+amount of times vs a mix of those amount of times.
+
+Any that don't go over in other columns can proceed to the next number.
+
+I think the scale is still going to blow up.
+
+
+
+
+[.##.] (3) (1,3) (2) (2,3) (0,2) (0,1) {3,5,4,7}
+
+           3
+           3
+         1 3
+         123
+  23    0123
+0123    0123
+0123    0123
+
+(1,3)
+(1,3)
+(1,3)
+(2,3)
+(2,3)
+(2,3)
+(0,1)
+(0,1)
+(0,2)
+(3)
+
+   3
+   3
+ 1 3
+ 123
+0123
+0123
+0123
+
+
+[.###.#] (0,1,2,3,4) (0,3,4) (0,1,2,4,5) (1,2) {10,11,11,5,10,5}
+
+
